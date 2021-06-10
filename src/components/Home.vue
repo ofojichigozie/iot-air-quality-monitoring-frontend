@@ -119,7 +119,7 @@
                 this.retrievedOneData = null;
 
                 if(this.date.length > 0){
-                    axios.get('http://localhost:5000/api/v1/environment-properties')
+                    axios.get('https://iot-air-quality-backend.herokuapp.com/api/v1/environment-properties')
                         .then(response => {
                             this.retrievedOneData = true;
                             this.allEnvironmentData = response.data.data;
@@ -142,7 +142,7 @@
             getAllEnvironmentData: function(){
                 this.retrievedOneData = null;
 
-                axios.get('http://localhost:5000/api/v1/environment-properties')
+                axios.get('https://iot-air-quality-backend.herokuapp.com/api/v1/environment-properties')
                     .then(response => {
                         this.retrievedOneData = false;
                         this.allEnvironmentData = response.data.data;
