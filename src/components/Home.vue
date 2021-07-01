@@ -125,7 +125,7 @@
                             this.allEnvironmentData = response.data.data;
 
                             this.allEnvironmentDataByDate = this.allEnvironmentData
-                                .filter(allEnvironmentDatum => allEnvironmentDatum.date === this.date);
+                                .filter(allEnvironmentDatum => allEnvironmentDatum.date === (new Date(this.date)).toLocaleDateString());
 
                             if(this.allEnvironmentDataByDate.length == 0){
                                 alert("There are no captured data for this date");
@@ -160,7 +160,7 @@
                 try{
                     localStorage.removeItem("IsEnvironsAdminLoggedIn");
                 }catch(e){
-                    console.log("Error removing from local storage");
+                    // DO NOTHING
                 }
                 
                 window.location.href = '/';
