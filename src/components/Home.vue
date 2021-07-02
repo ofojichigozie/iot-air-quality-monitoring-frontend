@@ -47,7 +47,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(allEnvironmentDatum, index) in allEnvironmentDataByDate" :key="index">
-                                    <td> {{ index }} </td>
+                                    <td> {{ index + 1 }} </td>
                                     <td> {{ allEnvironmentDatum.temperature }} </td>
                                     <td> {{ allEnvironmentDatum.humidity }} </td>
                                     <td> {{ allEnvironmentDatum.gasConcentration }} </td>
@@ -80,7 +80,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(allEnvironmentDatum, index) in allEnvironmentData" :key="index">
-                                    <td> {{ index }} </td>
+                                    <td> {{ index + 1 }} </td>
                                     <td> {{ allEnvironmentDatum.temperature }} </td>
                                     <td> {{ allEnvironmentDatum.humidity }} </td>
                                     <td> {{ allEnvironmentDatum.gasConcentration }} </td>
