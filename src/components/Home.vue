@@ -46,8 +46,8 @@
                                 <th>Capture Time</th>
                             </thead>
                             <tbody>
-                                <tr v-bind:key="allEnvironmentDatum.key" v-for="allEnvironmentDatum in allEnvironmentDataByDate">
-                                    <td> {{ allEnvironmentDatum.id }} </td>
+                                <tr v-for="(allEnvironmentDatum, index) in allEnvironmentDataByDate" :key="index">
+                                    <td> {{ index }} </td>
                                     <td> {{ allEnvironmentDatum.temperature }} </td>
                                     <td> {{ allEnvironmentDatum.humidity }} </td>
                                     <td> {{ allEnvironmentDatum.gasConcentration }} </td>
@@ -79,8 +79,8 @@
                                 <th>Capture Time</th>
                             </thead>
                             <tbody>
-                                <tr v-bind:key="allEnvironmentDatum.key" v-for="allEnvironmentDatum in allEnvironmentData">
-                                    <td> {{ allEnvironmentDatum.id }} </td>
+                                <tr v-for="(allEnvironmentDatum, index) in allEnvironmentData" :key="index">
+                                    <td> {{ index }} </td>
                                     <td> {{ allEnvironmentDatum.temperature }} </td>
                                     <td> {{ allEnvironmentDatum.humidity }} </td>
                                     <td> {{ allEnvironmentDatum.gasConcentration }} </td>
