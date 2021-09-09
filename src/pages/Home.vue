@@ -28,9 +28,11 @@
             </div>
 
             <div class="container">
-                <div v-if="retrievedOneData == true">
+                <div v-if="isAllData == true || isAllData == false">
                     <div>
-                        <h3 style="text-align: center; margin-top: 10px;">Below are the captured data of the environment for the specified date</h3>
+                        <h3 style="text-align: center; margin-top: 10px;">
+                            {{ tagLine }}
+                        </h3>
                     </div>
 
                     <div style="overflow-x: auto;">
@@ -46,48 +48,25 @@
                                 <th>Capture Time</th>
                             </thead>
                             <tbody>
-                                <tr v-for="(allEnvironmentDatum, index) in allEnvironmentDataByDate" :key="index">
+                                <tr v-for="(environmentDatum, index) in environmentData" :key="index">
                                     <td> {{ index + 1 }} </td>
-                                    <td> {{ allEnvironmentDatum.temperature }} </td>
-                                    <td> {{ allEnvironmentDatum.humidity }} </td>
-                                    <td> {{ allEnvironmentDatum.gasConcentration }} </td>
-                                    <td> PM2.5: {{ allEnvironmentDatum.particulateMatter.pm25 }}, PM10: {{ allEnvironmentDatum.particulateMatter.pm10 }}</td>
-                                    <td> Lat: {{ allEnvironmentDatum.location.latitude }}, Long: {{ allEnvironmentDatum.location.longitude }}</td>
-                                    <td> {{ allEnvironmentDatum.date }} </td>
-                                    <td> {{ allEnvironmentDatum.time }} </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div v-else-if="retrievedOneData == false">
-                    <div>
-                        <h3 style="text-align: center; margin-top: 10px;">Below are the captured environment data of all dates</h3>
-                    </div>
-
-                    <div style="overflow-x: auto;">
-                        <table>
-                            <thead>
-                                <th>S/N</th>
-                                <th>Temperature</th>
-                                <th>Humidity</th>
-                                <th>Gas Concentration</th>
-                                <th>Particulate Matter</th>
-                                <th>Location</th>
-                                <th>Capture Date</th>
-                                <th>Capture Time</th>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(allEnvironmentDatum, index) in allEnvironmentData" :key="index">
-                                    <td> {{ index + 1 }} </td>
-                                    <td> {{ allEnvironmentDatum.temperature }} </td>
-                                    <td> {{ allEnvironmentDatum.humidity }} </td>
-                                    <td> {{ allEnvironmentDatum.gasConcentration }} </td>
-                                    <td> PM2.5: {{ allEnvironmentDatum.particulateMatter.pm25 }}, PM10: {{ allEnvironmentDatum.particulateMatter.pm10 }}</td>
-                                    <td> Lat: {{ allEnvironmentDatum.location.latitude }}, Long: {{ allEnvironmentDatum.location.longitude }}</td>
-                                    <td> {{ allEnvironmentDatum.date }} </td>
-                                    <td> {{ allEnvironmentDatum.time }} </td>
+                                    <td> {{ environmentDatum.temperature }} </td>
+                                    <td> {{ environmentDatum.humidity }} </td>
+                                    <td> 
+                                        CO<sub>2</sub>: {{ environmentDatum.gasConcentration.mq3 }} <br/>
+                                        CH<sub>4</sub>: {{ environmentDatum.gasConcentration.mq5 }} <br/>
+                                        CO: {{ environmentDatum.gasConcentration.mq9 }}
+                                    </td>
+                                    <td> 
+                                        PM2.5: {{ environmentDatum.particulateMatter.pm25 }} <br/>
+                                        PM10: {{ environmentDatum.particulateMatter.pm10 }}
+                                    </td>
+                                    <td> 
+                                        Lat: {{ environmentDatum.location.latitude }} <br/>
+                                        Long: {{ environmentDatum.location.longitude }}
+                                    </td>
+                                    <td> {{ environmentDatum.date }} </td>
+                                    <td> {{ environmentDatum.time }} </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -108,27 +87,29 @@
             return {
                 email: 'environsadmin@gmail.com',
                 date: '',
-                allEnvironmentDataByDate: [],
-                allEnvironmentData: [],
-                retrievedOneData: null
+                tagLine: '',
+                environmentData: [],
+                isAllData: null
             }
         },
 
         methods: {
             getEnvironmentDataByDate: function(){
-                this.retrievedOneData = null;
+                this.isAllData = null;
 
                 if(this.date.length > 0){
                     axios.get('https://iot-air-quality-backend.herokuapp.com/api/v1/environment-properties')
                         .then(response => {
-                            this.retrievedOneData = true;
-                            this.allEnvironmentData = response.data.data;
+                            this.isAllData = false;
+                            this.environmentData = response.data.data;
 
-                            this.allEnvironmentDataByDate = this.allEnvironmentData
-                                .filter(allEnvironmentDatum => allEnvironmentDatum.date === (new Date(this.date)).toLocaleDateString());
+                            this.environmentData = this.environmentData
+                                .filter(environmentDatum => environmentDatum.date === (new Date(this.date)).toLocaleDateString());
 
-                            if(this.allEnvironmentDataByDate.length == 0){
+                            if(this.environmentData.length == 0){
                                 alert("There are no captured data for this date");
+                            }else{
+                                this.tagLine = "Captured data of the environment for the specified date";
                             }
                         })
                         .catch(e => {
@@ -140,15 +121,17 @@
             },
 
             getAllEnvironmentData: function(){
-                this.retrievedOneData = null;
+                this.isAllData = null;
 
                 axios.get('https://iot-air-quality-backend.herokuapp.com/api/v1/environment-properties')
                     .then(response => {
-                        this.retrievedOneData = false;
-                        this.allEnvironmentData = response.data.data;
+                        this.isAllData = true;
+                        this.environmentData = response.data.data;
 
-                        if(this.allEnvironmentData.length == 0){
+                        if(this.environmentData.length == 0){
                             alert("There are no captured data");
+                        }else{
+                            this.tagLine = "Captured environment data of all dates";
                         }
                     })
                     .catch(e => {
@@ -293,9 +276,9 @@
         padding: 8px;
     }
 
-    @media screen and (max-width: 450px){
+    @media screen and (max-width: 750px){
         .landing h1, .landing p{
-            font-size: 1em;
+            font-size: 1.3em;
         }
 
         .landing p{

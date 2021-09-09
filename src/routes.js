@@ -1,5 +1,5 @@
-import Login from './components/Login'
-import Home from './components/Home'
+import Login from './pages/Login'
+import Home from './pages/Home'
 
 let checkAuthenticatedState = (to, from, next) => {
     let isLoggedIn = localStorage.getItem('IsEnvironsAdminLoggedIn') !== null ? true : false;
