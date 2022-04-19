@@ -41,7 +41,7 @@
                                 <th>S/N</th>
                                 <th>Temperature</th>
                                 <th>Humidity</th>
-                                <th>Gas Concentration</th>
+                                <th>Gas Concentrations</th>
                                 <th>Particulate Matter</th>
                                 <th>Location</th>
                                 <th>Capture Date</th>
@@ -52,10 +52,21 @@
                                     <td> {{ index + 1 }} </td>
                                     <td> {{ environmentDatum.temperature }} </td>
                                     <td> {{ environmentDatum.humidity }} </td>
-                                    <td> 
-                                        CO<sub>2</sub>: {{ environmentDatum.gasConcentration.mq3 }} <br/>
-                                        CH<sub>4</sub>: {{ environmentDatum.gasConcentration.mq5 }} <br/>
-                                        CO: {{ environmentDatum.gasConcentration.mq9 }}
+                                    <td v-if="email === 'admin01@gmail.com'"> 
+                                        Carbon-dioxide: {{ environmentDatum.gasConcentration.mq3 }} <br/>
+                                        Methane: {{ environmentDatum.gasConcentration.mq5 }} <br/>
+                                        Natural Gas: {{ environmentDatum.gasConcentration.mq5e }} <br/>
+                                        Butane: {{ environmentDatum.gasConcentration.mq6 }} <br/>
+                                        Smoke: {{ environmentDatum.gasConcentration.mq7 }} <br/>
+                                        Carbon-monoxide: {{ environmentDatum.gasConcentration.mq9 }}
+                                    </td>
+                                    <td v-else-if="email === 'admin02@gmail.com'"> 
+                                        Butane: {{ environmentDatum.gasConcentration.mq2 }} <br/>
+                                        Methane: {{ environmentDatum.gasConcentration.mq4 }} <br/>
+                                        Hydrogen Gas: {{ environmentDatum.gasConcentration.mq8 }} <br/>
+                                        Flammable Gas: {{ environmentDatum.gasConcentration.mq9 }} <br/>
+                                        Ammonia: {{ environmentDatum.gasConcentration.mq135 }} <br/>
+                                        Hydrogen Sulphide Gas: {{ environmentDatum.gasConcentration.mq136 }}
                                     </td>
                                     <td> 
                                         PM2.5: {{ environmentDatum.particulateMatter.pm25 }} <br/>
@@ -85,7 +96,7 @@
 
         data(){
             return {
-                email: 'environsadmin@gmail.com',
+                email: '',
                 date: '',
                 tagLine: '',
                 environmentData: [],
@@ -98,7 +109,7 @@
                 this.isAllData = null;
 
                 if(this.date.length > 0){
-                    axios.get('https://iot-air-quality-backend.herokuapp.com/api/v1/environment-properties')
+                    axios.get(this.getUrl())
                         .then(response => {
                             this.isAllData = false;
                             this.environmentData = response.data.data;
@@ -123,7 +134,7 @@
             getAllEnvironmentData: function(){
                 this.isAllData = null;
 
-                axios.get('https://iot-air-quality-backend.herokuapp.com/api/v1/environment-properties')
+                axios.get(this.getUrl())
                     .then(response => {
                         this.isAllData = true;
                         this.environmentData = response.data.data;
@@ -141,13 +152,31 @@
 
             logout: function(){
                 try{
-                    localStorage.removeItem("IsEnvironsAdminLoggedIn");
+                    localStorage.removeItem("user");
                 }catch(e){
                     // DO NOTHING
                 }
                 
                 window.location.href = '/';
+            },
+
+            getUrl: function(){
+                const user = localStorage.getItem('user') ? localStorage.getItem('user') : "";
+
+                if(user === 'admin01@gmail.com'){
+                    return "https://iot-air-quality-backend.herokuapp.com/api/v1/environment-properties";
+                }
+
+                if(user === 'admin02@gmail.com'){
+                    return "https://iot-air-quality-backend.herokuapp.com/api/v2/environment-properties";
+                }
+
+                return "";
             }
+        },
+
+        mounted(){
+            this.email = localStorage.getItem('user') ? localStorage.getItem('user') : "";
         }
     }
 </script>

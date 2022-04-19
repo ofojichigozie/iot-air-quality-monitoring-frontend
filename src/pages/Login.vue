@@ -45,10 +45,16 @@
                     (this.password.trim() !== '')
                 ){
                     if(
-                        (this.email.trim() ==='environsadmin@gmail.com') && 
-                        (this.password.trim() === 'admin@123')
+                        (this.email.trim() ==='admin01@gmail.com') && 
+                        (this.password.trim() === 'admin01@123')
                     ){
-                        localStorage.setItem('IsEnvironsAdminLoggedIn', 'true');
+                        localStorage.setItem('user', 'admin01@gmail.com');
+                        window.location.href = '/home';
+                    }else if(
+                        (this.email.trim() ==='admin02@gmail.com') && 
+                        (this.password.trim() === 'admin02@123')
+                    ){
+                        localStorage.setItem('user', 'admin02@gmail.com');
                         window.location.href = '/home';
                     }else{
                         this.errorMessage = "Invalid login details";
