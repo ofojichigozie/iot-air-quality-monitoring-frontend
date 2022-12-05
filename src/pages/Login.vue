@@ -111,6 +111,10 @@
         border: none;
     }
 
+    .btn-primary:hover{
+        cursor: pointer;
+    }
+
     @media screen and (min-width: 760px){
         .form-div{
             width: 30% !important;
