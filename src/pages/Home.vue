@@ -122,8 +122,8 @@
 
 <script>
 import axios from "axios";
-import environmentDataO1 from "../db/environmentDataO1.json";
-import environmentDataO2 from "../db/environmentDataO2.json";
+import environmentDataO1 from "src/db/environmentDataO1.json";
+import environmentDataO2 from "src/db/environmentDataO2.json";
 
 export default {
   name: "Home",
