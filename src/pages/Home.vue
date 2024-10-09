@@ -122,8 +122,6 @@
 
 <script>
 import axios from "axios";
-import environmentData01 from "src/db/environmentData01.json";
-import environmentData02 from "src/db/environmentData02.json";
 
 export default {
   name: "Home",
@@ -142,7 +140,7 @@ export default {
   },
 
   methods: {
-    getEnvironmentDataByDate: function () {
+    getEnvironmentDataByDate: async function () {
       this.isAllData = null;
       this.loading = true;
       this.getDataButtonText = "Loading";
@@ -150,7 +148,7 @@ export default {
 
       if (this.date.length > 0) {
         this.isAllData = false;
-        this.environmentData = this.getEnvironmentData();
+        this.environmentData = await this.fetchEnvironmentData();
 
         this.environmentData = this.environmentData.filter(
           (environmentDatum) =>
@@ -173,13 +171,13 @@ export default {
       }
     },
 
-    getAllEnvironmentData: function () {
+    getAllEnvironmentData: async function () {
       this.isAllData = null;
       this.loading = true;
       this.getAllDataButtonText = "Loading";
 
       this.isAllData = true;
-      this.environmentData = this.getEnvironmentData();
+      this.environmentData = await this.fetchEnvironmentData();
 
       if (this.environmentData.length == 0) {
         alert("There are no captured data");
@@ -202,17 +200,19 @@ export default {
       window.location.href = "/";
     },
 
-    getEnvironmentData: function () {
+    fetchEnvironmentData: async function () {
       const user = localStorage.getItem("user")
         ? localStorage.getItem("user")
         : "";
 
       if (user === "admin01@gmail.com") {
-        return environmentData01;
+        const response = await axios.get("/db/environmentData01.json");
+        return response.data;
       }
 
       if (user === "admin02@gmail.com") {
-        return environmentData02;
+        const response = await axios.get("/db/environmentData02.json");
+        return response.data;
       }
 
       return [];
