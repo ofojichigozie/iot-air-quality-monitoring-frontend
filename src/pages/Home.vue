@@ -122,8 +122,8 @@
 
 <script>
 import axios from "axios";
-import environmentDataO1 from "src/db/environmentDataO1.json";
-import environmentDataO2 from "src/db/environmentDataO2.json";
+import environmentData01 from "src/db/environmentData01.json";
+import environmentData02 from "src/db/environmentData02.json";
 
 export default {
   name: "Home",
@@ -208,11 +208,11 @@ export default {
         : "";
 
       if (user === "admin01@gmail.com") {
-        return environmentDataO1;
+        return environmentData01;
       }
 
       if (user === "admin02@gmail.com") {
-        return environmentDataO2;
+        return environmentData02;
       }
 
       return [];
