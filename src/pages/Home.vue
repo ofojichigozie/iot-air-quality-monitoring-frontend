@@ -122,6 +122,8 @@
 
 <script>
 import axios from "axios";
+import environmentDataO1 from "../db/environmentDataO1.json";
+import environmentDataO2 from "../db/environmentDataO2.json";
 
 export default {
   name: "Home",
@@ -144,35 +146,28 @@ export default {
       this.isAllData = null;
       this.loading = true;
       this.getDataButtonText = "Loading";
+      
 
       if (this.date.length > 0) {
-        axios
-          .get(this.getUrl())
-          .then((response) => {
-            this.isAllData = false;
-            this.environmentData = response.data.data;
+        this.isAllData = false;
+        this.environmentData = this.getEnvironmentData();
 
-            this.environmentData = this.environmentData.filter(
-              (environmentDatum) =>
-                environmentDatum.date ===
-                new Date(this.date).toLocaleDateString()
-            );
+        this.environmentData = this.environmentData.filter(
+          (environmentDatum) =>
+            environmentDatum.date ===
+            new Date(this.date).toLocaleDateString()
+        );
 
-            if (this.environmentData.length == 0) {
-              alert("There are no captured data for this date");
-            } else {
-              this.tagLine =
-                "Captured data of the environment for the specified date";
-            }
-          })
-          .catch((e) => {
-            alert(e);
-          })
-          .finally(() => {
-            window.scrollBy(0, 300);
-            this.loading = false;
-            this.getDataButtonText = "Get data";
-          });
+        if (this.environmentData.length == 0) {
+          alert("There are no captured data for this date");
+        } else {
+          this.tagLine =
+            "Captured data of the environment for the specified date";
+        }
+
+        window.scrollBy(0, 300);
+        this.loading = false;
+        this.getDataButtonText = "Get data";
       } else {
         alert("Please, select date.");
       }
@@ -183,26 +178,18 @@ export default {
       this.loading = true;
       this.getAllDataButtonText = "Loading";
 
-      axios
-        .get(this.getUrl())
-        .then((response) => {
-          this.isAllData = true;
-          this.environmentData = response.data.data;
+      this.isAllData = true;
+      this.environmentData = this.getEnvironmentData();
 
-          if (this.environmentData.length == 0) {
-            alert("There are no captured data");
-          } else {
-            this.tagLine = "Captured environment data of all dates";
-          }
-        })
-        .catch((e) => {
-          alert(e);
-        })
-        .finally(() => {
-          window.scrollBy(0, 300);
-          this.loading = false;
-          this.getAllDataButtonText = "Get all data";
-        });
+      if (this.environmentData.length == 0) {
+        alert("There are no captured data");
+      } else {
+        this.tagLine = "Captured environment data of all dates";
+      }
+
+      window.scrollBy(0, 300);
+      this.loading = false;
+      this.getAllDataButtonText = "Get all data";
     },
 
     logout: function () {
@@ -215,20 +202,20 @@ export default {
       window.location.href = "/";
     },
 
-    getUrl: function () {
+    getEnvironmentData: function () {
       const user = localStorage.getItem("user")
         ? localStorage.getItem("user")
         : "";
 
       if (user === "admin01@gmail.com") {
-        return "https://iaqm-be.netlify.app/.netlify/functions/api/v1/environment-properties";
+        return environmentDataO1;
       }
 
       if (user === "admin02@gmail.com") {
-        return "https://iaqm-be.netlify.app/.netlify/functions/api/v2/environment-properties";
+        return environmentDataO2;
       }
 
-      return "";
+      return [];
     },
   },
 
